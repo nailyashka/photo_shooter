@@ -21,8 +21,10 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  cloud_firestore: ^1.0.0 # new
-  firebase_auth: ^1.0.0   # new
+  provider: ^5.0.0
+  cloud_firestore: ^2.4.0
+  firebase_auth: ^3.0.1
+  firebase_dynamic_links: ^2.0.7
   flutter:
     sdk: flutter
 
@@ -35,6 +37,7 @@ dev_dependencies:
   lint: ^1.5.3
   flutter_test:
     sdk: flutter
+  test: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

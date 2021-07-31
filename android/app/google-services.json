@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "139959483230",
+    "project_id": "photo-shooter-2b21a",
+    "storage_bucket": "photo-shooter-2b21a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139959483230:android:64b0a603f73759077fedcf",
+        "android_client_info": {
+          "package_name": "com.gs.photo_shooter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "139959483230-5pcsftm0pos6lq2feb126p45akal0gmh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTrhLDq9hgdbw7PAjy52w-aC_dHOA6edo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "139959483230-5pcsftm0pos6lq2feb126p45akal0gmh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "139959483230-u7jupugnd3enijhd17pei1jpmh1e4kvm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gs.photoShooter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

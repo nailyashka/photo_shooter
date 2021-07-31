@@ -24,3 +24,4 @@ linter:
     sort_pub_dependencies: false
     omit_local_variable_types: false
     avoid_print: false
+    prefer_const_constructors: false
