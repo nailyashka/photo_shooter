@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EmailAuthenticationPage extends StatefulWidget {
@@ -34,7 +35,16 @@ class _EmailAuthenticationPageState extends State<EmailAuthenticationPage> {
               ),
             ),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  print('sent email = ${emailController.text}');
+                  await FirebaseAuth.instance.sendSignInLinkToEmail(
+                    email: emailController.text,
+                    actionCodeSettings: ActionCodeSettings(
+                      url: 'https://photoshooter.page.link/dmCn',
+                      handleCodeInApp: true,
+                      androidPackageName: 'com.gs.photo_shooter',
+                    ),
+                  );
                   Navigator.pushNamed(context, 'EmailSentPage');
                 },
                 child: Text('sent me a letter'))

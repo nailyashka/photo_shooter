@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:photo_shooter/app_state.dart';
 import 'package:photo_shooter/email_auth.dart';
+import 'package:photo_shooter/home_page.dart';
 import 'package:photo_shooter/notice.dart';
+import 'package:photo_shooter/target_server.dart';
 import 'package:photo_shooter/welcome.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,6 +44,9 @@ class MyApp extends StatelessWidget {
           'EmailAuthenticationPage': (contex) =>
               const EmailAuthenticationPage(),
           'EmailSentPage': (contex) => const EmailSentPage(),
+          'HomePage': (context) => const HomePage(),
+          'EnterPage': (context) => const EnterPage(),
+          'LogInPage': (context) => const EnterPage(),
         },
         home: Consumer<AppState>(
           builder: (_, app, child) => buildHomePage(app.loginState),
@@ -55,11 +61,7 @@ class MyApp extends StatelessWidget {
       case AppLoginState.loggedOut:
         return WelcomePage();
       case AppLoginState.loggedIn:
-        return const Scaffold(
-          body: Center(
-            child: Text('hi'),
-          ),
-        );
+        return HomePage();
     }
   }
 }
