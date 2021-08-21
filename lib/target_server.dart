@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EnterPage extends StatefulWidget {
   const EnterPage({Key? key}) : super(key: key);
@@ -22,6 +23,7 @@ class _EnterPageState extends State<EnterPage> {
   String? password;
 
   bool passwordOrLoginIsIncorrect = false;
+  bool workInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class _EnterPageState extends State<EnterPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                enabled: !workInProgress,
                 initialValue: kReleaseMode ? null : 'amr34.activemap.ru',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -57,6 +60,7 @@ class _EnterPageState extends State<EnterPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                enabled: !workInProgress,
                 initialValue: kReleaseMode ? null : 'depadmin',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -77,6 +81,7 @@ class _EnterPageState extends State<EnterPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                enabled: !workInProgress,
                 initialValue: kReleaseMode ? null : '123456789',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -96,7 +101,10 @@ class _EnterPageState extends State<EnterPage> {
                     helperStyle: TextStyle(fontSize: 16)),
               ),
             ),
-            ElevatedButton(onPressed: enterPressed, child: Text('Enter')),
+            if (workInProgress)
+              CircularProgressIndicator()
+            else
+              ElevatedButton(onPressed: enterPressed, child: Text('Enter')),
           ],
         ),
       ),
@@ -113,22 +121,42 @@ class _EnterPageState extends State<EnterPage> {
     }
     print('input is valid');
     formState.save();
-    makeRequest();
+    FocusScope.of(context).unfocus();
+    setState(() {
+      workInProgress = true;
+    });
+    bool success = await makeRequest();
+    if (success) {
+      Navigator.of(context).pop();
+    } else {
+      setState(() {
+        workInProgress = false;
+      });
+    }
   }
 
-  Future<void> makeRequest() async {
+  Future<bool> makeRequest() async {
     final url = Uri.parse('https://${host}/rest/auth/by-login?apiVersion=1.4');
     try {
       final response = await http.post(url,
           body: '{"login":"$login","password":"$password"}');
       print(response.statusCode);
       print('body = ${response.body}');
+      await Future<void>.delayed(Duration(seconds: 3));
       if (response.statusCode == 200) {
         print('success');
         final j = jsonDecode(response.body) as Map<String, dynamic>;
         final fio = j['fio'] as String;
         final token = j['token'] as String;
+        final departmentId = j['department_id'] as int?;
+        final roleId = j['role_id'] as int;
         print('hello $fio with token=$token');
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('userName', fio);
+        prefs.setString('token', token);
+        prefs.setInt('departmentId', departmentId ?? 0);
+        prefs.setInt('roleId', roleId);
+        return true;
       } else {
         if (response.statusCode == 403) {
           passwordOrLoginIsIncorrect = true;
@@ -138,8 +166,10 @@ class _EnterPageState extends State<EnterPage> {
         }
       }
     } catch (ex) {
-      showErrorDialog('no internet?');
+      print(ex.toString());
+      showErrorDialog('no internet? \n $ex');
     }
+    return false;
   }
 
   void showErrorDialog(String errDescription) {
